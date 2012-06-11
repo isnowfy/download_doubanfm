@@ -24,7 +24,7 @@ def download(song):
     urllib.urlretrieve(song['url'], filepath)
     picname = song['picture'][1+song['picture'].rindex('/'):]
     picpath = os.path.join(songs_dir, picname)
-    urllib.urlretrieve(song['picture'], picpath)
+    urllib.urlretrieve(song['picture'].replace('mpic','lpic'), picpath)
     tag = eyeD3.Tag()
     tag.link(filepath)
     tag.header.setVersion(eyeD3.ID3_V2_3)
