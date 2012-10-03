@@ -5,16 +5,20 @@ import urllib, urllib2, cookielib, re, json, eyeD3, os
 
 num_p = re.compile(r'(\d+)')
 songs_dir = 'songs'
-base_url = 'http://douban.fm/j/mine/playlist?type=n&h=&channel=0&context=channel:0|subject_id:%s'
+base_url = 'http://douban.fm/j/mine/playlist?type=n&channel=0'
+songinfo_url = 'http://dbfmdb.sinaapp.com/api/song.php?sid=%s'
 invalid = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
 
 def valid_filename(s):
     return filter(lambda x:x not in invalid, s)
 
-def get_songs_information(url):
-    subject_id = num_p.search(url).groups()[0]
-    ret = json.loads(urllib2.urlopen(base_url % subject_id, timeout=20).read())
-    return filter(lambda x:x['album'].endswith(subject_id+'/'), ret['song'])
+def get_songs_information(sid):
+    detail = json.loads(urllib2.urlopen(songinfo_url%sid).read())
+    req = urllib2.Request(base_url)
+    req.add_header('User-Agent', 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)')
+    req.add_header('Cookie', 'start="%sg%sg"'%(sid, detail['ssid']))
+    ret = json.loads(urllib2.urlopen(req, timeout=20).read())
+    return ret['song']
 
 def download(song):
     try:
@@ -64,7 +68,7 @@ def get(myurl, cookie):
         mark = False
         try:
             for j in range(10):
-                songs = get_songs_information(str(p[2].a))
+                songs = get_songs_information(sid)
                 for song in songs:
                     if sid == song['sid']:
                         download(song)
