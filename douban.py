@@ -25,7 +25,7 @@ def download(song):
         os.mkdir(songs_dir)
     except:
         pass
-    filename = '%s.mp3' % valid_filename(song['title'])
+    filename = '%s-%s.mp3' % (valid_filename(song['artist']) , valid_filename(song['title']))
     filepath = os.path.join(songs_dir, filename)
     if os.path.exists(filepath):
         return
