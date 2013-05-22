@@ -55,6 +55,20 @@ def html_decode(html):
     #return html.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>').replace('&quot;', '"').replace('&#39;', "'")
     import HTMLParser
     return HTMLParser.HTMLParser().unescape(html)
+
+def ins_ssid(cookie):
+    try:
+        myurl = 'http://douban.fm/j/mine/playlist?type=n&sid=&pt=0.0&channel=-3&from=mainsite'
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
+        urllib2.install_opener(opener)
+        req = urllib2.Request(myurl)
+        req.add_header('User-Agent', 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)')
+        req.add_header('Cookie', cookie)
+        content = urllib2.urlopen(req, timeout=20).read()
+        for song in json.loads(content)['song']:
+            urllib.urlopen('http://redb.sinaapp.com/ins/doubanfm/%s/%s/' % (song['sid'], song['ssid'])).read()
+    except:
+        pass
  
 def get(myurl, cookie):
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
@@ -74,6 +88,7 @@ def get(myurl, cookie):
         mark = False
         try:
             for j in range(10):
+                ins_ssid(cookie)
                 songs = get_songs_information(sid)
                 for song in songs:
                     if sid == song['sid']:
