@@ -1,1 +1,16 @@
 download your favourite songs in doubanfm
+
+you can run
+~~~
+python douban.py
+~~~
+to download you red starred songs
+
+
+you can run
+~~~
+python download_album.py
+~~~
+to download the whole album songs
+
+the douwnload_album input should like /subject/2978518/
