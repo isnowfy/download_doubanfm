@@ -1,6 +1,5 @@
 # coding: utf-8
  
-from BeautifulSoup import BeautifulSoup
 import urllib, urllib2, cookielib, re, json, eyeD3, os
 
 import download
@@ -20,23 +19,24 @@ def get(myurl, cookie):
     req.add_header('User-Agent', 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)')
     req.add_header('Cookie', cookie)
     content = urllib2.urlopen(req, timeout=20).read()
-    soup = BeautifulSoup(str(content))
-    for div in soup.findAll('div', {'class' : 'info_wrapper'}):
-        p = div.find('div', {'class' : 'song_info'}).findAll("p")
-        sid = div.find('div', {'class' : 'action'})['sid']
-        album = RE_ALBUM.search(div.find('a')['href']).group(0)
-        ssid = download_album.get_ssid(album, sid)
+    for s in json.loads(content)['songs']:
+        sid = s['id']
+        album = RE_ALBUM.search(s['path']).group(0)
         try:
-            print "song:" + html_decode(p[0].string) + "\nsinger:" + html_decode(p[1].string) + "\nalbum:" + html_decode(p[2].a.string)
+            print "song:" + html_decode(s['title']) + "\nsinger:" + html_decode(s['artist']) + "\nalbum:" + s['path']
         except:
-            print "song..."
-        if download.handle(sid, ssid):
-            print 'succeed!\n\n'
-        else:
+            print 'song...'
+        try:
+            ssid = download_album.get_ssid(album, sid)
+            if download.handle(sid, ssid):
+                print 'succeed!\n\n'
+            else:
+                print 'fail!\n\n'
+        except:
             print 'fail!\n\n'
  
 def main():
-    url = 'http://douban.fm/mine?start=%d&type=liked'
+    url = 'http://douban.fm/j/play_record?type=liked&start=%d'
     cookie = raw_input('cookie:')
     print 'you should enter the pages you want to download'
     page0 = int(raw_input('page from:'))
