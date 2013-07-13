@@ -1,6 +1,7 @@
 # coding: utf-8
  
 import urllib, urllib2, cookielib, re, json, eyeD3, os
+import Cookie
 
 import download
 import download_album
@@ -18,6 +19,7 @@ def get(myurl, cookie):
     req = urllib2.Request(myurl)
     req.add_header('User-Agent', 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)')
     req.add_header('Cookie', cookie)
+    req.add_header('Referer', 'http://douban.fm/mine')
     content = urllib2.urlopen(req, timeout=20).read()
     for s in json.loads(content)['songs']:
         sid = s['id']
@@ -36,8 +38,11 @@ def get(myurl, cookie):
             print 'fail!\n\n'
  
 def main():
-    url = 'http://douban.fm/j/play_record?type=liked&start=%d'
     cookie = raw_input('cookie:')
+    c = Cookie.SimpleCookie()
+    c.load(cookie)
+    ck = c.get('ck').value
+    url = 'http://douban.fm/j/play_record?ck=' + ck + '&type=liked&start=%d'
     print 'you should enter the pages you want to download'
     page0 = int(raw_input('page from:'))
     page1 = int(raw_input('page to:'))
