@@ -39,10 +39,12 @@ def get(myurl, cookie):
  
 def main():
     cookie = raw_input('cookie:')
+    user_id_sign = raw_input('window.user_id_sign:')
     c = Cookie.SimpleCookie()
     c.load(cookie)
     ck = c.get('ck').value
-    url = 'http://douban.fm/j/play_record?ck=' + ck + '&type=liked&start=%d'
+    bid = c.get('bid').value
+    url = 'http://douban.fm/j/play_record?ck=' + ck + '&type=liked&start=%d&spbid=' + user_id_sign+ bid
     print 'you should enter the pages you want to download'
     page0 = int(raw_input('page from:'))
     page1 = int(raw_input('page to:'))
