@@ -44,12 +44,13 @@ def main():
     c.load(cookie)
     ck = c.get('ck').value
     bid = c.get('bid').value
-    url = 'http://douban.fm/j/play_record?ck=' + ck + '&type=liked&start=%d&spbid=' + user_id_sign+ bid
+    spbid = urllib.quote(user_id_sign+bid)
+    url = 'http://douban.fm/j/play_record?ck=' + ck + '&type=liked&start=%d&spbid='
     print 'you should enter the pages you want to download'
     page0 = int(raw_input('page from:'))
     page1 = int(raw_input('page to:'))
     for i in range(page1-page0+1):
-        get(url%((i+page0-1)*15), cookie)
+        get(url%((i+page0-1)*15)+spbid, cookie)
  
 if __name__ == '__main__':
     main()
