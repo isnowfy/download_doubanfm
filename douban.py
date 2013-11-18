@@ -13,7 +13,7 @@ def html_decode(html):
     import HTMLParser
     return HTMLParser.HTMLParser().unescape(html)
  
-def get(myurl, cookie):
+def get(myurl, cookie, kbps):
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
     urllib2.install_opener(opener)
     req = urllib2.Request(myurl)
@@ -30,7 +30,7 @@ def get(myurl, cookie):
             print 'song...'
         try:
             ssid = download_album.get_ssid(album, sid)
-            if download.handle(sid, ssid):
+            if download.handle(sid, ssid, kbps, cookie):
                 print 'succeed!\n\n'
             else:
                 print 'fail!\n\n'
@@ -40,6 +40,7 @@ def get(myurl, cookie):
 def main():
     cookie = raw_input('cookie:')
     user_id_sign = raw_input('window.user_id_sign:')
+    kbps = raw_input('kbps(64,128,192):')
     c = Cookie.SimpleCookie()
     c.load(cookie)
     ck = c.get('ck').value
@@ -50,7 +51,7 @@ def main():
     page0 = int(raw_input('page from:'))
     page1 = int(raw_input('page to:'))
     for i in range(page1-page0+1):
-        get(url%((i+page0-1)*15)+spbid, cookie)
+        get(url%((i+page0-1)*15)+spbid, cookie, kbps)
  
 if __name__ == '__main__':
     main()

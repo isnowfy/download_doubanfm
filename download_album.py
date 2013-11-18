@@ -24,10 +24,12 @@ def get_ssid(album, sid):
  
 def main():
     album = raw_input('album:')
+    kbps = raw_input('kbps(64,128,192):')
+    cookie = raw_input('cookie:')
     ssids = get_ssids(album)
     print 'all', len(ssids), 'songs'
     for sid, ssid in ssids.iteritems():
-        ret = download.handle(sid, ssid)
+        ret = download.handle(sid, ssid, kbps, cookie)
         print ret
  
 if __name__ == '__main__':
